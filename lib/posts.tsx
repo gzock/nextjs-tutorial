@@ -4,11 +4,13 @@ import matter from 'gray-matter'
 import { remark } from 'remark'
 import html from 'remark-html'
 
+import { PostData, Params } from '../interfaces'
+
 const postsDirectory = path.join(process.cwd(), 'posts')
 
 export function getStoredPostsData() {
     const fileNames = fs.readdirSync(postsDirectory)
-    const allPostsData = fileNames.map(fileName => {
+    const allPostsData: PostData[] = fileNames.map(fileName => {
         const id = fileName.replace(/\.md$/, '')
 
         const fullPath = path.join(postsDirectory, fileName)
@@ -18,8 +20,9 @@ export function getStoredPostsData() {
 
         return {
             id,
-            ...matterResult.data
-        }
+            ...matterResult.data,
+            //...(matterResult.data as { date: string; title: string; })
+        } as PostData
     })
 
     return allPostsData.sort((a, b) => {
@@ -31,7 +34,7 @@ export function getStoredPostsData() {
     })
 }
 
-export function getAllPostIds() {
+export function getAllPostIds(): { params: Params }[] {
     const fileNames = fs.readdirSync(postsDirectory)
 
     return fileNames.map(fileName => {
@@ -43,7 +46,7 @@ export function getAllPostIds() {
     })
 }
 
-export async function getPostData(id) {
+export async function getPostData(id: string) {
     const fullPath = path.join(postsDirectory, `${id}.md`)
     const fileContents = fs.readFileSync(fullPath, 'utf8')
 

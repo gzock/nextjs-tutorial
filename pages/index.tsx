@@ -7,8 +7,10 @@ import utilStyles from '../styles/utils.module.css'
 
 import Link from 'next/link'
 import Date from '../components/date'
+import { PostData } from '../interfaces'
 
 import { getStoredPostsData } from '../lib/posts'
+import { GetStaticProps, GetStaticPropsContext } from 'next'
 
 export default function Home({ allPostsData }) {
   return (
@@ -35,7 +37,8 @@ export default function Home({ allPostsData }) {
   )
 }
 
-export async function getStaticProps() {
+
+export const getStaticProps: GetStaticProps = async () => {
   const allPostsData = getStoredPostsData()
   return {
     props: {
